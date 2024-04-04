@@ -1,0 +1,106 @@
+\section*{Algorithms}
+
+\subsection{Calculation of unzipping time:} 
+
+Inputs: Sequence to unzip, Thermodynamic rates of formation and dissociation of H-bonds, Kinetic modulating factors or cooperative factors (catalytic, inhibiting)
+
+Output: Unzipping time
+
+\subsection*{Algorithm:} 
+1. Given the sequence (length = n) find all possible configuration of the sequence during unzipping process
+
+i. Out of n base pairs, depending on whether a H-bond is present or absent construct $2^n$ state space. It will be the permutations of n number of 0's or 1's where 0 is for absence and 1 is for presence of H-bond at nth location of the sequence.
+
+2. As the end base pairs (boundary) of the linear sequence are not to be broken, extend the state space and sequence accordingly. Sequence is extended by adding a C to the 5' end and G to the 3' end. This is because, out of all possibilities only this combination is the faster than others.
+
+3. Construct a transition rate matrix Q of dimension $2^n \times 2^n$ where Q(i,j) represents the transition rate from ith to jth state.
+
+i. The process of defining transition rates is explained in method section
+
+ii. Do note that transitions where more than one H-bond is forming or dissociating is prohibited by making Q(i,j) = 0 for those transition elements
+
+iii. The diagonal elements are calculated by maintaining sum of transitions from a state to all other states state is zero. 
+
+4. Resident time matrix T is calculated using equation 1.
+
+5. unzipping time is the element corresponding to fully zipped state
+
+
+
+
+\subsection{Identifying 5 fastest and slowest unzipping sequences:}
+
+inputs: Sequence length, and parameters
+
+output: The fastest unzipping sequence
+
+\subsection*{Algorithm:}
+1. for a given sequence length, store all possible sequences composed of G's and C's 
+
+2. Calculate the unzipping time of all the sequences and compare them to find 5 fastest and 5 slowest unzipping sequences
+
+
+
+\subsection{Time evolution of unzipping a sequence:}
+
+input: Consider any sequence (highly skewed one used for observation)
+
+Output: a plot showing variation of probability occupancy of all possible states
+
+\subsection*{Algorithm:}
+1.  Following the method explained in calculation of unzipping time, find the transition rate matrix Q
+
+2. To avoid back transition from the target state, make the row zero corresponding to the target state, i.e. fully unzipped state
+
+3. Sample time from zero to 10 times the unzipping time of the sequence
+
+4. Define initial probability occupancy P(0) of each states by a vector of all zeros and one 1 corresponding to the initial state i.e. fully zipped state
+
+5. use equation (3) to calculate change in P at each time scale.
+
+6. Plot P(t) with time (t)
+
+
+\subsection{Find the phase space for palindrome:}
+
+input: range of sequence length and temperature to consider 
+
+Output: phase space of palindrome
+
+\subsection*{Algorithm: }
+1. form a grid of dimension (n, m) where n is the number of temperatures you want to consider, (e.g. 310K to 400K in the gap of 5K) and m is the number of lengths of sequences to consider (minimum of 3) 
+
+2. for each grid entry find the fastest unzipping sequence with corresponding length and temperature.
+
+3. Identify which are palindromic
+
+
+
+\subsection{Find Skew in replication origin sequences:}
+
+Input: Organism
+
+Output: Cumulative skew plot
+
+\subsection*{Algorithm:}
+1. in ncbi-databse search for the key word 'rep\_origin' and filter for organism (e.g. mitochondria)
+
+2. Download the sequences
+
+3. Extract the replication origin sequence by using the index in the feature file specified by starting and ending location of replication origins.
+
+4. Store all such sequences in a matrix A by replacing purines by -1 and pyrimidines by +1
+
+5. As the sequences are of different lengths, center align all the sequences by putting 0's where nt is absent.
+
+6. Find cumulative sum of each row and store in a different matrix B
+
+7. Find sum of B for each column
+
+8. Find number of nonzero entries in A for each column and divide it to B to normalize the skew
+
+9. Plot the final sum in y with sequence coordinate in x
+
+10. the sum of nonzero entries in A will give the sequence count to plot in secondary y axis in a bar plot
+
+\end{document}
